@@ -32,8 +32,9 @@ resources:
   - name: branch-manager-config
     type: git
     source:
-      uri: https://github.com/pivotaltracker/concourse-branch-manager.git
-      branch: master
+      uri: git@github.com:dennispidun/ci-config.git
+      private_key: ((githubPrivateKey))
+      branch: config
   #    paths: [ci/config/*]
 
   # This repo contains any secret credential config that needs to be
@@ -41,8 +42,9 @@ resources:
   - name: branch-manager-credentials
     type: git
     source:
-      uri: https://github.com/pivotaltracker/concourse-branch-manager.git
-      branch: master
+      uri: git@github.com:dennispidun/ci-config.git
+      private_key: ((githubPrivateKey))
+      branch: credentials
   #    paths: [ci/credentials/*]
 
 jobs:
@@ -61,12 +63,12 @@ jobs:
       trigger: true
     - get: config-repo
       resource: branch-manager-config
-      params: {depth: 20}
-      trigger: true
+      params: {depth: 1}
+      trigger: false
     - get: credentials-repo
       resource: branch-manager-credentials
-      params: {depth: 20}
-      trigger: true
+      params: {depth: 1}
+      trigger: false
     - task: manage-branches
       file: concourse-branch-manager/tasks/manage-branches.yml
       params:

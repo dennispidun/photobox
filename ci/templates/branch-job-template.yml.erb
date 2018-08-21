@@ -13,9 +13,9 @@
     file: <%= pipeline_prefix %>-git-src/ci/tasks/build-and-test.yml
     input_mapping: {git-src: <%= pipeline_prefix %>-git-src}
     on_failure:
-	  do:
-	    - put: <%= branch_name %>-repo-status
-		  params: { state: error, commit: <%= pipeline_prefix %>-git-src }
+      do:
+        - put: <%= branch_name %>-repo-status
+          params: { state: error, commit: <%= pipeline_prefix %>-git-src }
   
   - put: <%= branch_name %>-repo-status
     params: { state: success, commit: <%= pipeline_prefix %>-git-src }

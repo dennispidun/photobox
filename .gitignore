@@ -1,0 +1,8 @@
+build
+out
+.gradle
+.idea
+ci/credentials.yml
+src/main/resources/static/
+*.lock
+.DS_Store

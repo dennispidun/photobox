@@ -1,0 +1,82 @@
+resource_types:
+  - name: git-branches
+    type: docker-image
+    source:
+      repository: tracker/git-branches-resource
+
+resources:
+  - name: concourse-branch-manager
+    type: git
+    source:
+      uri: https://github.com/atastyt0ast/concourse-branch-manager.git
+      branch: master
+      ignore_paths: [Gemfile, Gemfile.lock]
+
+  - name: branch-manager-git-branches
+    type: git-branches
+    source:
+      uri: git@github.com:dennispidun/photobox.git
+      private_key: ((githubPrivateKey))
+      max_branches: 20
+
+  - name: branch-manager-templates
+    type: git
+    source:
+      uri: git@github.com:dennispidun/photobox.git
+      private_key: ((githubPrivateKey))
+      branch: master
+      paths: [ci/templates/*]
+
+  # This repo contains any non-secret non-credential config that needs to be
+  # passed into your generated pipeline via fly --load-vars-from options
+  - name: branch-manager-config
+    type: git
+    source:
+      uri: https://github.com/pivotaltracker/concourse-branch-manager.git
+      branch: master
+  #    paths: [ci/config/*]
+
+  # This repo contains any secret credential config that needs to be
+  # passed into your generated pipeline via fly --load-vars-from options
+  - name: branch-manager-credentials
+    type: git
+    source:
+      uri: https://github.com/pivotaltracker/concourse-branch-manager.git
+      branch: master
+  #    paths: [ci/credentials/*]
+
+jobs:
+  - name: branch-manager
+    serial: true
+    plan:
+    - get: concourse-branch-manager
+      params: {depth: 20}
+      trigger: true
+    - get: git-branches
+      resource: branch-manager-git-branches
+      trigger: true
+    - get: template-repo
+      resource: branch-manager-templates
+      params: {depth: 20}
+      trigger: true
+    - get: config-repo
+      resource: branch-manager-config
+      params: {depth: 20}
+      trigger: true
+    - get: credentials-repo
+      resource: branch-manager-credentials
+      params: {depth: 20}
+      trigger: true
+    - task: manage-branches
+      file: concourse-branch-manager/tasks/manage-branches.yml
+      params:
+        BRANCH_RESOURCE_TEMPLATE: template-repo/ci/templates/branch-resource-template.yml.erb
+        BRANCH_JOB_TEMPLATE: template-repo/ci/templates/branch-job-template.yml.erb
+        PIPELINE_RESOURCE_TYPE_TEMPLATE: template-repo/ci/templates/branch-resource-type-template.yml.erb
+        CONCOURSE_URL: https://ci.anyting.io
+        CONCOURSE_USERNAME: ((concourseUsername))
+        CONCOURSE_PASSWORD: ((concoursePassword))
+        CONCOURSE_TEAM: den
+        PIPELINE_NAME: "git-branches"
+        PIPELINE_LOAD_VARS_1: githubPrivateKey=((githubPrivateKey))
+        PIPELINE_LOAD_VARS_4: githubToken=((githubToken))

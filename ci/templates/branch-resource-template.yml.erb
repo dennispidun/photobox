@@ -3,12 +3,12 @@
   source:
     uri: <%= uri %>
     branch: <%= branch_name %>
-    private_key: {{githubPrivateKey}}
+    private_key: ((githubPrivateKey))
 
 - name: <%= branch_name %>-repo-status
   type: github-status
   source:
     repository: dennispidun/photobox
-    access_token: {{githubToken}}
+    access_token: ((githubToken))
     branch: <%= branch_name %>
     context: concourse-ci

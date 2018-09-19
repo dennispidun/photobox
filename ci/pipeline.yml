@@ -9,7 +9,7 @@ resources:
 jobs:
 - name: build-and-test
   plan:
-  - get: battleships-src
+  - get: git-src
     trigger: true
   - task: build
     file: my-battleships-src/ci/tasks/build-and-test.yml

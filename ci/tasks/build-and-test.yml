@@ -3,7 +3,6 @@ platform: linux
 
 image_resource:
   type: docker-image
-  privileged: true
   source:
     repository: selenium/node-firefox
     tag: latest

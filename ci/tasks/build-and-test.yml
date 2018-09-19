@@ -20,7 +20,5 @@ run:
   - |
     export TERM=dumb
     cd git-src
-    . docker/scripts/docker-lib.sh
-    start_docker
     ./gradlew clean build allTest
     cp ./build/libs/*.jar ../artifact/webapp.jar

@@ -20,5 +20,6 @@ run:
   - |
     export TERM=dumb
     cd git-src
+    chmod +x gradlew
     ./gradlew clean build allTest
     cp ./build/libs/*.jar ../artifact/webapp.jar

@@ -1,0 +1,128 @@
+buildscript {
+    repositories {
+        mavenCentral()
+    }
+    dependencies {
+        classpath('org.springframework.boot:spring-boot-gradle-plugin:2.0.3.RELEASE')
+    }
+}
+
+plugins {
+    id 'com.moowork.node' version '1.2.0'
+}
+
+apply plugin: 'java'
+apply plugin: 'idea'
+apply plugin: 'checkstyle'
+apply plugin: 'org.springframework.boot'
+apply plugin: 'io.spring.dependency-management'
+
+group 'photobox'
+version '1.0-SNAPSHOT'
+
+bootJar {
+    baseName = 'photobox'
+    version =  version
+}
+
+sourceCompatibility = 1.8
+targetCompatibility = 1.8
+
+sourceSets {
+    apiTest {
+        java {
+            compileClasspath += main.output + test.output
+            runtimeClasspath += main.output + test.output
+            srcDir file('src/apiTest/java')
+        }
+        resources.srcDir file('src/test/resources')
+    }
+    uatTest {
+        java {
+            compileClasspath += main.output + test.output
+            runtimeClasspath += main.output + test.output
+            srcDir file('src/uatTest/java')
+        }
+        resources.srcDir file('src/test/resources')
+    }
+}
+
+configurations {
+    apiTestCompile.extendsFrom testCompile
+    apiTestRuntime.extendsFrom testRuntime
+
+    uatTestCompile.extendsFrom apiTestCompile
+    uatTestRuntime.extendsFrom apiTestRuntime
+}
+
+idea {
+    module {
+        testSourceDirs += project.sourceSets.apiTest.java.srcDirs
+        testSourceDirs += project.sourceSets.uatTest.java.srcDirs
+    }
+}
+
+checkstyle {
+    configFile = new File(rootDir, 'checkstyle.xml')
+    toolVersion = '8.11'
+    ignoreFailures = false
+}
+
+repositories {
+    mavenCentral()
+}
+
+dependencies {
+    compile 'org.springframework.boot:spring-boot-starter-web'
+    compile 'org.springframework.boot:spring-boot-starter-data-jpa'
+    compile 'com.h2database:h2'
+    compile 'org.apache.commons:commons-lang3:3.7'
+    compile 'org.projectlombok:lombok:1.18.0'
+
+    testCompile 'junit:junit:4.12'
+    testCompile 'org.mockito:mockito-core:2.18.3'
+    testCompile 'org.springframework.boot:spring-boot-starter-test'
+
+    uatTestCompile 'org.fluentlenium:fluentlenium-junit:3.5.2'
+    uatTestCompile 'org.fluentlenium:fluentlenium-assertj:3.5.2'
+    uatTestCompile 'org.seleniumhq.selenium:selenium-chrome-driver:3.12.0'
+    uatTestCompile 'org.seleniumhq.selenium:selenium-firefox-driver:3.12.0'
+}
+
+node {
+    download = false
+    npmWorkDir = file("${project.buildDir}/npm")
+    nodeModulesDir = file("${project.projectDir}/client")
+}
+
+task copyResources(type: Copy) {
+    delete 'src/main/resources/static'
+    from 'client/dist/client' into 'src/main/resources/static'
+}
+
+task apiTest(type: Test) {
+    testClassesDirs = sourceSets.apiTest.output.classesDirs
+    classpath = sourceSets.apiTest.runtimeClasspath
+}
+
+task uatTest(type: Test) {
+    testClassesDirs = sourceSets.uatTest.output.classesDirs
+    classpath = sourceSets.uatTest.runtimeClasspath
+}
+
+task allTest(type: Test) {
+    dependsOn check
+    dependsOn test
+    dependsOn apiTest
+    dependsOn uatTest
+}
+
+bootRun {
+    args = ['--spring.profiles.active=dev']
+}
+
+copyResources.dependsOn yarn_run_build
+processResources.dependsOn copyResources
+
+apiTest.shouldRunAfter(test)
+uatTest.shouldRunAfter(apiTest)

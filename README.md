@@ -1,5 +1,5 @@
 # System requirements
 
 ## Browser support
-* Firefox
-* Chrome
+* Firefox 60+
+* Chrome 67+

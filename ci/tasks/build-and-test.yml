@@ -19,13 +19,9 @@ run:
   - -exc
   - |
     export TERM=dumb
-
     cd git-src
-
     . docker/scripts/docker-lib.sh
     start_docker
     docker-compose -f docker/docker-compose.yml up -d
-
     ./gradlew clean build allTest
-
     cp ./build/libs/*.jar ../artifact/webapp.jar

@@ -4,6 +4,5 @@ out
 .idea
 ci/credentials.yml
 src/main/resources/static/
-*.lock
 .DS_Store
 .iml

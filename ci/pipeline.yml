@@ -12,4 +12,5 @@ jobs:
   - get: git-src
     trigger: true
   - task: build
+    privileged: true
     file: git-src/ci/tasks/build-and-test.yml

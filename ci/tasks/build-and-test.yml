@@ -4,7 +4,7 @@ platform: linux
 image_resource:
   type: docker-image
   source:
-    repository: selenium/node-firefox
+    repository: groupmdm/dind-node-firefox
     tag: latest
 
 inputs:
@@ -14,6 +14,7 @@ outputs:
   - name: artifact
 
 run:
+  user: root
   path: sh
   args:
   - -exc

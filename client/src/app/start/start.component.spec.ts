@@ -8,27 +8,27 @@ describe('StartComponent', () => {
   let httpMock: HttpTestingController;
   let component: StartComponent;
   let fixture: ComponentFixture<StartComponent>;
-  
+
   beforeEach(async(() => {
     TestBed.configureTestingModule({
-        declarations: [
-          StartComponent,
-        ],
-        imports: [
-          MatIconModule,
-          HttpClientTestingModule,
-        ]
-      })
+      declarations: [
+        StartComponent,
+      ],
+      imports: [
+        MatIconModule,
+        HttpClientTestingModule,
+      ]
+    })
       .compileComponents();
     httpMock = TestBed.get(HttpTestingController);
   }));
-  
+
   beforeEach(() => {
     fixture = TestBed.createComponent(StartComponent);
     component = fixture.componentInstance;
     fixture.detectChanges();
   });
-  
+
   it('should create component', function () {
     expect(component).toBeTruthy();
   });

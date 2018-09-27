@@ -1,3 +1,5 @@
 <div class="start-container">
-  <h1>IT WORKS!</h1>
+  <div class="images">
+    <img *ngFor="let image of photos" class="image" [src]="image.uri">
+  </div>
 </div>

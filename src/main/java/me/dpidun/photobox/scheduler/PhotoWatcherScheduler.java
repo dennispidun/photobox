@@ -1,16 +1,12 @@
-package me.dpidun.photobox;
+package me.dpidun.photobox.scheduler;
 
-import org.springframework.beans.factory.annotation.Value;
+import me.dpidun.photobox.photo.PhotoService;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Component;
 
-import java.io.IOException;
-import java.nio.channels.FileChannel;
-import java.nio.channels.FileLock;
 import java.nio.file.*;
 
 import static java.nio.file.StandardWatchEventKinds.ENTRY_CREATE;
-import static java.nio.file.StandardWatchEventKinds.ENTRY_MODIFY;
 import static org.springframework.data.util.CastUtils.cast;
 
 @Component

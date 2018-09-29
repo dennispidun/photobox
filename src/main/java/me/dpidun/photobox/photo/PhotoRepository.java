@@ -1,9 +1,8 @@
-package me.dpidun.photobox;
+package me.dpidun.photobox.photo;
 
+import me.dpidun.photobox.photo.Photo;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
-
-import java.util.Optional;
 
 @Repository
 public interface PhotoRepository extends JpaRepository<Photo, Long> {

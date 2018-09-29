@@ -1,4 +1,4 @@
-package me.dpidun.photobox;
+package me.dpidun.photobox.photo;
 
 public class PhotoAlreadyExistsException extends RuntimeException {
 }

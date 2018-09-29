@@ -1,4 +1,4 @@
-package me.dpidun.photobox;
+package me.dpidun.photobox.photo;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.*;

@@ -1,4 +1,4 @@
-package me.dpidun.photobox;
+package me.dpidun.photobox.config;
 
 import org.springframework.context.annotation.Configuration;
 import org.springframework.web.servlet.config.annotation.ViewControllerRegistry;

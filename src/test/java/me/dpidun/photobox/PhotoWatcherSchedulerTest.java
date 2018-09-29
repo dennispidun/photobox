@@ -1,5 +1,7 @@
 package me.dpidun.photobox;
 
+import me.dpidun.photobox.photo.PhotoService;
+import me.dpidun.photobox.scheduler.PhotoWatcherScheduler;
 import org.junit.Before;
 import org.junit.Test;
 import org.mockito.ArgumentCaptor;
@@ -11,7 +13,6 @@ import java.nio.file.WatchService;
 import java.util.Collections;
 
 import static java.nio.file.StandardWatchEventKinds.ENTRY_CREATE;
-import static java.nio.file.StandardWatchEventKinds.ENTRY_MODIFY;
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.endsWith;
 import static org.hamcrest.Matchers.startsWith;

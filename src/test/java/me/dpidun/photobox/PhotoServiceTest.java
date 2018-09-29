@@ -1,5 +1,6 @@
 package me.dpidun.photobox;
 
+import me.dpidun.photobox.photo.*;
 import org.exparity.hamcrest.date.DateMatchers;
 import org.h2.store.fs.FileUtils;
 import org.junit.Before;
@@ -8,7 +9,6 @@ import org.mockito.ArgumentCaptor;
 
 import java.io.File;
 import java.io.IOException;
-import java.nio.file.*;
 import java.time.temporal.ChronoUnit;
 import java.util.Arrays;
 import java.util.Collections;
@@ -20,8 +20,6 @@ import static org.hamcrest.Matchers.*;
 import static org.hamcrest.Matchers.startsWith;
 import static org.junit.Assert.assertThat;
 import static org.mockito.Mockito.*;
-
-import static java.nio.file.StandardWatchEventKinds.*;
 
 public class PhotoServiceTest {
 

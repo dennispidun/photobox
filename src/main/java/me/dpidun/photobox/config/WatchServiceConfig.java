@@ -1,4 +1,4 @@
-package me.dpidun.photobox;
+package me.dpidun.photobox.config;
 
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;

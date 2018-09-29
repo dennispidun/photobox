@@ -1,6 +1,5 @@
-package me.dpidun.photobox;
+package me.dpidun.photobox.photo;
 
-import org.h2.store.fs.FileUtils;
 import org.springframework.stereotype.Service;
 
 import java.util.Date;

@@ -1,5 +1,6 @@
 package me.dpidun.photobox;
 
+import me.dpidun.photobox.photo.PhotoRepository;
 import org.h2.store.fs.FileUtils;
 import org.junit.Test;
 import org.junit.runner.RunWith;

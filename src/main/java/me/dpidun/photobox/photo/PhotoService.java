@@ -26,6 +26,12 @@ public class PhotoService {
 
     public void addPhoto(String fileName) {
 
+        if (!fileName.toLowerCase().endsWith(".png")
+                && !fileName.toLowerCase().endsWith(".jpg")
+                && !fileName.toLowerCase().endsWith(".jpeg")) {
+            throw new FileTypeNotSupportedException();
+        }
+
         if (photoRepository.existsByFileName(fileName)) {
             throw new PhotoAlreadyExistsException();
         }

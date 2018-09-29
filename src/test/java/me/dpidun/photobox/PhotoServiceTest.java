@@ -24,13 +24,16 @@ import static org.mockito.Mockito.*;
 public class PhotoServiceTest {
 
     public static final String AN_URI = "AN_URI/";
-    public static final String A_FILE_SUFFIX = ".PNG";
+    public static final String A_FILE_SUPPORTED_SUFFIX = ".PNG";
+    public static final String ANOTHER_FILE_SUPPORTED_SUFFIX = ".JPG";
+    public static final String ANOTHER_OTHER_FILE_SUPPORTED_SUFFIX = ".JPEG";
+    public static final String A_FILE_UNSUPPORTED_SUFFIX = ".GIF";
     public static final String A_FILE_PREFIX = "A_FILE_PREFIX";
     public static final String ANOTHER_URI = "ANOTHER_URI/";
     PhotoService unitUnderTest;
     PhotoRepository photoRepository;
 
-    private File A_FILE;
+    private File A_SUPPORTED_FILE;
     private String A_FILE_NAME;
 
     @Before
@@ -38,10 +41,10 @@ public class PhotoServiceTest {
         photoRepository = mock(PhotoRepository.class);
         unitUnderTest = new PhotoService(photoRepository);
 
-        A_FILE = File.createTempFile(A_FILE_PREFIX, A_FILE_SUFFIX);
-        A_FILE.deleteOnExit();
+        A_SUPPORTED_FILE = File.createTempFile(A_FILE_PREFIX, A_FILE_SUPPORTED_SUFFIX);
+        A_SUPPORTED_FILE.deleteOnExit();
 
-        A_FILE_NAME = FileUtils.getName(A_FILE.getAbsolutePath());
+        A_FILE_NAME = FileUtils.getName(A_SUPPORTED_FILE.getAbsolutePath());
     }
 
     @Test
@@ -82,8 +85,22 @@ public class PhotoServiceTest {
             unitUnderTest.addPhoto(A_FILE_NAME);
         } finally {
             assertThat(stringArgumentCaptor.getValue(), startsWith(A_FILE_PREFIX));
-            assertThat(stringArgumentCaptor.getValue(), endsWith(A_FILE_SUFFIX));
+            assertThat(stringArgumentCaptor.getValue(), endsWith(A_FILE_SUPPORTED_SUFFIX));
         }
+    }
+
+    @Test(expected = FileTypeNotSupportedException.class)
+    public void addPhoto_withNoJpegOrPngFileExtension_shouldThrowFileTypeNotSupportedException() {
+        unitUnderTest.addPhoto(A_FILE_PREFIX+A_FILE_UNSUPPORTED_SUFFIX);
+    }
+
+    @Test
+    public void addPhoto_withJpegOrPngFileExtension_shouldCheckExistence() {
+        when(photoRepository.existsByFileName(anyString())).thenReturn(false);
+
+        unitUnderTest.addPhoto(A_FILE_PREFIX+ANOTHER_FILE_SUPPORTED_SUFFIX);
+        unitUnderTest.addPhoto(A_FILE_PREFIX+ANOTHER_OTHER_FILE_SUPPORTED_SUFFIX);
+        unitUnderTest.addPhoto(A_FILE_PREFIX+A_FILE_SUPPORTED_SUFFIX);
     }
 
     @Test
@@ -96,7 +113,7 @@ public class PhotoServiceTest {
         verify(photoRepository).save(photoArgumentCaptor.capture());
 
         assertThat(photoArgumentCaptor.getValue().getFileName(), startsWith(A_FILE_PREFIX));
-        assertThat(photoArgumentCaptor.getValue().getFileName(), endsWith(A_FILE_SUFFIX));
+        assertThat(photoArgumentCaptor.getValue().getFileName(), endsWith(A_FILE_SUPPORTED_SUFFIX));
         assertThat(photoArgumentCaptor.getValue().getCreatedAt(), DateMatchers.within(20, ChronoUnit.SECONDS, new Date()));
     }
 }

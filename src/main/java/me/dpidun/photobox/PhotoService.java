@@ -5,6 +5,7 @@ import org.springframework.stereotype.Service;
 
 import java.util.Date;
 import java.util.List;
+import java.util.stream.Collectors;
 
 @Service
 public class PhotoService {
@@ -17,7 +18,11 @@ public class PhotoService {
     }
 
     public List<Photo> getPhotos() {
-        return photoRepository.findAll();
+        return photoRepository
+                .findAll()
+                .stream()
+                .filter((photo -> photo.getProcessingStatus().equals(ProcessingStatus.FINISHED)))
+                .collect(Collectors.toList());
     }
 
     public void addPhoto(String fileName) {

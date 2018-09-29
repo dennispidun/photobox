@@ -10,6 +10,7 @@ import java.io.File;
 import java.io.IOException;
 import java.nio.file.*;
 import java.time.temporal.ChronoUnit;
+import java.util.Arrays;
 import java.util.Collections;
 import java.util.Date;
 import java.util.List;
@@ -27,6 +28,7 @@ public class PhotoServiceTest {
     public static final String AN_URI = "AN_URI/";
     public static final String A_FILE_SUFFIX = ".PNG";
     public static final String A_FILE_PREFIX = "A_FILE_PREFIX";
+    public static final String ANOTHER_URI = "ANOTHER_URI/";
     PhotoService unitUnderTest;
     PhotoRepository photoRepository;
 
@@ -47,11 +49,30 @@ public class PhotoServiceTest {
     @Test
     public void getPhotos_shouldReturnPhotos() {
 
-        when(photoRepository.findAll()).thenReturn(Collections.singletonList(new Photo(AN_URI)));
+        Photo photo = new Photo(AN_URI);
+        photo.setProcessingStatus(ProcessingStatus.FINISHED);
+        when(photoRepository.findAll()).thenReturn(Collections.singletonList(photo));
 
         List<Photo> actual = unitUnderTest.getPhotos();
         assertThat(actual, hasSize(1));
         assertThat(actual.get(0).fileName, is(AN_URI));
+    }
+
+    @Test
+    public void getPhotos_withProcessingPhotos_shouldReturnSuccessfulPhotos() {
+        when(photoRepository.findAll()).thenReturn(Arrays.asList(
+                new Photo(1L, AN_URI, new Date(), ProcessingStatus.CREATED),
+                new Photo(2L, AN_URI, new Date(), ProcessingStatus.PROCESSING_STEP_FINISHING),
+                new Photo(3L, AN_URI, new Date(), ProcessingStatus.PROCESSING_STEP_THUMBNAIL),
+                new Photo(4L, AN_URI, new Date(), ProcessingStatus.PROCESSING_STEP_WATERMARK),
+                new Photo(5L, AN_URI, new Date(), ProcessingStatus.FAILED),
+                new Photo(6L, ANOTHER_URI, new Date(), ProcessingStatus.FINISHED)));
+
+        List<Photo> actual = unitUnderTest.getPhotos();
+        assertThat(actual, hasSize(1));
+        assertThat(actual.get(0).fileName, is(ANOTHER_URI));
+        assertThat(actual.get(0).getProcessingStatus(), is(ProcessingStatus.FINISHED));
+
     }
 
     @Test(expected = PhotoAlreadyExistsException.class)

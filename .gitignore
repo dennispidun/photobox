@@ -5,4 +5,4 @@ out
 ci/credentials.yml
 src/main/resources/static/
 .DS_Store
-.iml
+*.iml

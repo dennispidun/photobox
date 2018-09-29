@@ -16,11 +16,12 @@ public class PhotoService {
         this.photoRepository = photoRepository;
     }
 
-    public List<Photo> getPhotos() {
+    public List<PhotoListItem> getPhotos() {
         return photoRepository
                 .findAll()
                 .stream()
                 .filter((photo -> photo.getProcessingStatus().equals(ProcessingStatus.FINISHED)))
+                .map((photo -> new PhotoListItem("assets/photos/"+photo.fileName, photo.createdAt)))
                 .collect(Collectors.toList());
     }
 
@@ -38,7 +39,7 @@ public class PhotoService {
 
         Photo photo = new Photo(fileName);
         photo.setCreatedAt(new Date());
-        photo.setProcessingStatus(ProcessingStatus.CREATED);
+        photo.setProcessingStatus(ProcessingStatus.FINISHED);
         photoRepository.save(photo);
     }
 }

@@ -21,7 +21,6 @@ public class Photo {
     @NonNull
     String fileName;
 
-    @JsonProperty("created_at")
     @Temporal(TemporalType.TIMESTAMP)
     Date createdAt;
 

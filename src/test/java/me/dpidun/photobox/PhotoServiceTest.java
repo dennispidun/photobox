@@ -53,7 +53,7 @@ public class PhotoServiceTest {
 
         List<Photo> actual = unitUnderTest.getPhotos();
         assertThat(actual, hasSize(1));
-        assertThat(actual.get(0).fileName, is(AN_URI));
+        assertThat(actual.get(0).getFileName(), is(AN_URI));
     }
 
     @Test
@@ -68,7 +68,7 @@ public class PhotoServiceTest {
 
         List<Photo> actual = unitUnderTest.getPhotos();
         assertThat(actual, hasSize(1));
-        assertThat(actual.get(0).fileName, is(ANOTHER_URI));
+        assertThat(actual.get(0).getFileName(), is(ANOTHER_URI));
         assertThat(actual.get(0).getProcessingStatus(), is(ProcessingStatus.FINISHED));
 
     }
@@ -95,8 +95,8 @@ public class PhotoServiceTest {
         ArgumentCaptor<Photo> photoArgumentCaptor = ArgumentCaptor.forClass(Photo.class);
         verify(photoRepository).save(photoArgumentCaptor.capture());
 
-        assertThat(photoArgumentCaptor.getValue().fileName, startsWith(A_FILE_PREFIX));
-        assertThat(photoArgumentCaptor.getValue().fileName, endsWith(A_FILE_SUFFIX));
-        assertThat(photoArgumentCaptor.getValue().createdAt, DateMatchers.within(20, ChronoUnit.SECONDS, new Date()));
+        assertThat(photoArgumentCaptor.getValue().getFileName(), startsWith(A_FILE_PREFIX));
+        assertThat(photoArgumentCaptor.getValue().getFileName(), endsWith(A_FILE_SUFFIX));
+        assertThat(photoArgumentCaptor.getValue().getCreatedAt(), DateMatchers.within(20, ChronoUnit.SECONDS, new Date()));
     }
 }

@@ -14,8 +14,9 @@ export class StartComponent implements OnInit{
   }
 
   ngOnInit(): void {
-    this.http.get<Photo>("/api/photos").subscribe((data) => {
-      this.photos.push(data);
+    this.http.get<Photo[]>("/api/photos").subscribe((data) => {
+      console.log(data);
+      this.photos = data;
     })
   }
 

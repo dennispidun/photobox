@@ -82,6 +82,8 @@ dependencies {
     testCompile 'junit:junit:4.12'
     testCompile 'org.mockito:mockito-core:2.18.3'
     testCompile 'org.springframework.boot:spring-boot-starter-test'
+    testCompile 'org.exparity:hamcrest-date:2.0.0'
+    testCompile 'org.awaitility:awaitility:3.1.2'
 
     uatTestCompile 'org.fluentlenium:fluentlenium-junit:3.5.2'
     uatTestCompile 'org.fluentlenium:fluentlenium-assertj:3.5.2'

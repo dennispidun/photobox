@@ -6,4 +6,6 @@ spring:
     driverClassName: org.h2.Driver
     username: sa
     password:
+images:
+  path: C:\\Users\\dpidu\\Desktop\\TestFolder
 

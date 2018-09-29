@@ -23,7 +23,9 @@ import static org.springframework.test.web.servlet.request.MockMvcRequestBuilder
 @RunWith(SpringRunner.class)
 public class PhotoControllerTest {
 
-    public static final String AN_URI = "AN_URI";
+    public static final String A_FILE_PNG = "A_FILE.PNG";
+    public static final String A_PATH = "A_PATH/";
+    public static final String AN_URI = A_PATH + A_FILE_PNG;
     public static final long A_TIMESTAMP = 1234L;
 
     @Autowired

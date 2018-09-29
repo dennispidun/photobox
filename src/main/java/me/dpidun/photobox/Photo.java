@@ -19,10 +19,13 @@ public class Photo {
     Long id;
 
     @NonNull
-    String uri;
+    String fileName;
 
     @JsonProperty("created_at")
     @Temporal(TemporalType.TIMESTAMP)
     Date createdAt;
+
+    @Enumerated(EnumType.STRING)
+    private ProcessingStatus processingStatus;
 
 }

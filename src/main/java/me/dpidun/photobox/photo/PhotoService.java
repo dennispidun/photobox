@@ -20,7 +20,7 @@ public class PhotoService {
         return photoRepository
                 .findAll()
                 .stream()
-                .filter((photo -> photo.getProcessingStatus().equals(ProcessingStatus.FINISHED)))
+                .filter((photo -> photo.getProcessingStatus().equals(Photo.ProcessingStatus.FINISHED)))
                 .map((photo -> new PhotoListItem("assets/photos/"+photo.fileName, photo.createdAt)))
                 .collect(Collectors.toList());
     }
@@ -39,7 +39,7 @@ public class PhotoService {
 
         Photo photo = new Photo(fileName);
         photo.setCreatedAt(new Date());
-        photo.setProcessingStatus(ProcessingStatus.CREATED);
+        photo.setProcessingStatus(Photo.ProcessingStatus.CREATED);
         photoRepository.save(photo);
     }
 }

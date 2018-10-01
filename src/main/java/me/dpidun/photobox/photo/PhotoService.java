@@ -39,7 +39,7 @@ public class PhotoService {
 
         Photo photo = new Photo(fileName);
         photo.setCreatedAt(new Date());
-        photo.setProcessingStatus(ProcessingStatus.FINISHED);
+        photo.setProcessingStatus(ProcessingStatus.CREATED);
         photoRepository.save(photo);
     }
 }

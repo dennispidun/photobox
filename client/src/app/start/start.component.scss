@@ -1,5 +1,13 @@
 @import "../../scss/variables";
 
 .start-container {
+  .images {
+    text-align: center;
 
+    .image {
+      display: inline-block;
+      margin: 20px 0 20pxgo 0;
+    }
+
+  }
 }

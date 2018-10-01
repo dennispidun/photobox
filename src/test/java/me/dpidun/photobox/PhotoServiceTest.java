@@ -23,17 +23,16 @@ import static org.mockito.Mockito.*;
 
 public class PhotoServiceTest {
 
-    public static final String AN_URI = "AN_URI/";
-    public static final String A_FILE_SUPPORTED_SUFFIX = ".PNG";
-    public static final String ANOTHER_FILE_SUPPORTED_SUFFIX = ".JPG";
-    public static final String ANOTHER_OTHER_FILE_SUPPORTED_SUFFIX = ".JPEG";
-    public static final String A_FILE_UNSUPPORTED_SUFFIX = ".GIF";
-    public static final String A_FILE_PREFIX = "A_FILE_PREFIX";
-    public static final String ANOTHER_URI = "ANOTHER_URI/";
-    PhotoService unitUnderTest;
-    PhotoRepository photoRepository;
+    private static final String AN_URI = "AN_URI/";
+    private static final String A_FILE_SUPPORTED_SUFFIX = ".PNG";
+    private static final String ANOTHER_FILE_SUPPORTED_SUFFIX = ".JPG";
+    private static final String ANOTHER_OTHER_FILE_SUPPORTED_SUFFIX = ".JPEG";
+    private static final String A_FILE_UNSUPPORTED_SUFFIX = ".GIF";
+    private static final String A_FILE_PREFIX = "A_FILE_PREFIX";
+    private static final String ANOTHER_URI = "ANOTHER_URI/";
+    private PhotoService unitUnderTest;
+    private PhotoRepository photoRepository;
 
-    private File A_SUPPORTED_FILE;
     private String A_FILE_NAME;
 
     @Before
@@ -41,10 +40,10 @@ public class PhotoServiceTest {
         photoRepository = mock(PhotoRepository.class);
         unitUnderTest = new PhotoService(photoRepository);
 
-        A_SUPPORTED_FILE = File.createTempFile(A_FILE_PREFIX, A_FILE_SUPPORTED_SUFFIX);
-        A_SUPPORTED_FILE.deleteOnExit();
+        File a_SUPPORTED_FILE = File.createTempFile(A_FILE_PREFIX, A_FILE_SUPPORTED_SUFFIX);
+        a_SUPPORTED_FILE.deleteOnExit();
 
-        A_FILE_NAME = FileUtils.getName(A_SUPPORTED_FILE.getAbsolutePath());
+        A_FILE_NAME = FileUtils.getName(a_SUPPORTED_FILE.getAbsolutePath());
     }
 
     @Test
@@ -54,9 +53,9 @@ public class PhotoServiceTest {
         photo.setProcessingStatus(ProcessingStatus.FINISHED);
         when(photoRepository.findAll()).thenReturn(Collections.singletonList(photo));
 
-        List<Photo> actual = unitUnderTest.getPhotos();
+        List<PhotoListItem> actual = unitUnderTest.getPhotos();
         assertThat(actual, hasSize(1));
-        assertThat(actual.get(0).getFileName(), is(AN_URI));
+        assertThat(actual.get(0).getUri(), is(AN_URI));
     }
 
     @Test
@@ -69,10 +68,9 @@ public class PhotoServiceTest {
                 new Photo(5L, AN_URI, new Date(), ProcessingStatus.FAILED),
                 new Photo(6L, ANOTHER_URI, new Date(), ProcessingStatus.FINISHED)));
 
-        List<Photo> actual = unitUnderTest.getPhotos();
+        List<PhotoListItem> actual = unitUnderTest.getPhotos();
         assertThat(actual, hasSize(1));
-        assertThat(actual.get(0).getFileName(), is(ANOTHER_URI));
-        assertThat(actual.get(0).getProcessingStatus(), is(ProcessingStatus.FINISHED));
+        assertThat(actual.get(0).getUri(), is(ANOTHER_URI));
 
     }
 
@@ -91,16 +89,16 @@ public class PhotoServiceTest {
 
     @Test(expected = FileTypeNotSupportedException.class)
     public void addPhoto_withNoJpegOrPngFileExtension_shouldThrowFileTypeNotSupportedException() {
-        unitUnderTest.addPhoto(A_FILE_PREFIX+A_FILE_UNSUPPORTED_SUFFIX);
+        unitUnderTest.addPhoto(A_FILE_PREFIX + A_FILE_UNSUPPORTED_SUFFIX);
     }
 
     @Test
     public void addPhoto_withJpegOrPngFileExtension_shouldCheckExistence() {
         when(photoRepository.existsByFileName(anyString())).thenReturn(false);
 
-        unitUnderTest.addPhoto(A_FILE_PREFIX+ANOTHER_FILE_SUPPORTED_SUFFIX);
-        unitUnderTest.addPhoto(A_FILE_PREFIX+ANOTHER_OTHER_FILE_SUPPORTED_SUFFIX);
-        unitUnderTest.addPhoto(A_FILE_PREFIX+A_FILE_SUPPORTED_SUFFIX);
+        unitUnderTest.addPhoto(A_FILE_PREFIX + ANOTHER_FILE_SUPPORTED_SUFFIX);
+        unitUnderTest.addPhoto(A_FILE_PREFIX + ANOTHER_OTHER_FILE_SUPPORTED_SUFFIX);
+        unitUnderTest.addPhoto(A_FILE_PREFIX + A_FILE_SUPPORTED_SUFFIX);
     }
 
     @Test

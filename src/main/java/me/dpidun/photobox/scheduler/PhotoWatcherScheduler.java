@@ -35,8 +35,10 @@ public class PhotoWatcherScheduler {
 
                 WatchEvent<Path> ev = cast(event);
                 Path filename = ev.context();
+                try {
+                    photoService.addPhoto(filename.toString());
+                } catch (Exception e) { }
 
-                photoService.addPhoto(filename.toString());
             }
         }
         key.reset();

@@ -12,6 +12,7 @@ import org.springframework.batch.core.repository.JobRepository;
 import org.springframework.batch.core.repository.support.JobRepositoryFactoryBean;
 import org.springframework.batch.support.transaction.ResourcelessTransactionManager;
 import org.springframework.beans.factory.annotation.Qualifier;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.core.task.TaskExecutor;
@@ -22,7 +23,7 @@ import javax.sql.DataSource;
 
 
 @Configuration
-@EnableBatchProcessing(modular = true)
+@EnableBatchProcessing
 public class BatchConfiguration {
     @Bean
     public JobLauncher getJobLauncher(JobRepository jobRepository, TaskExecutor taskExecutor) throws Exception {
@@ -39,7 +40,7 @@ public class BatchConfiguration {
     }
 
     @Bean
-    public JobRepository getJobRepository(DataSource dataSource) throws Exception {
+    public JobRepository getJobRepository(@Qualifier("dataSource") DataSource dataSource) throws Exception {
         JobRepositoryFactoryBean factory = new JobRepositoryFactoryBean();
         factory.setDataSource(dataSource);
         factory.setTransactionManager(getTransactionManager());
@@ -63,8 +64,8 @@ public class BatchConfiguration {
     }
 
     @Bean
-    public AvailabilityCheckImportStep getImportStep(PhotoRepository photoRepository, JobRepository jobRepository) {
-        AvailabilityCheckImportStep availabilityCheckImportStep = new AvailabilityCheckImportStep(photoRepository);
+    public AvailabilityCheckImportStep getImportStep(PhotoRepository photoRepository, JobRepository jobRepository, @Value("${images.path}") String imagePath) {
+        AvailabilityCheckImportStep availabilityCheckImportStep = new AvailabilityCheckImportStep(photoRepository, imagePath);
         availabilityCheckImportStep.setName("checkPhotoAvailability");
         availabilityCheckImportStep.setJobRepository(jobRepository);
 

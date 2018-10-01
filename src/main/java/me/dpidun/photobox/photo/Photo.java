@@ -1,6 +1,5 @@
 package me.dpidun.photobox.photo;
 
-import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.*;
 
 import javax.persistence.*;
@@ -29,6 +28,7 @@ public class Photo {
 
     public enum ProcessingStatus {
         CREATED,
+        CHECKING_STEP_AVAILABILITY,
         PROCESSING_STEP_WATERMARK,
         PROCESSING_STEP_THUMBNAIL,
         PROCESSING_STEP_FINISHING,

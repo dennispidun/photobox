@@ -6,6 +6,13 @@ spring:
     driverClassName: org.h2.Driver
     username: sa
     password:
+    name: h2DataSource
+  h2:
+    console:
+      enabled: true
+  batch:
+    job:
+      enabled: false
 images:
   path: C:/Users/dpidu/Desktop/TestFolder/
 

@@ -6,3 +6,4 @@ ci/credentials.yml
 src/main/resources/static/
 .DS_Store
 *.iml
+node_modules/

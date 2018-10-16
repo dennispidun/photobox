@@ -59,7 +59,7 @@ public class PhotoService {
         photo.setCreatedAt(new Date());
         photo.setProcessingStatus(Photo.ProcessingStatus.CREATED);
 
-        photoRepository.save(photo);
+        photo = photoRepository.save(photo);
 
         Map<String, JobParameter> jobParameterMap = new HashMap<>();
         jobParameterMap.put(PARAMETER_PHOTO_ID, new JobParameter(photo.getId()));

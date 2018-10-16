@@ -14,5 +14,5 @@ spring:
     job:
       enabled: false
 images:
-  path: C:/Users/dpidu/Desktop/TestFolder/
+  path: /home/dennis/projects/private/testfolder/
 

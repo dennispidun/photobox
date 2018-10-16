@@ -40,7 +40,7 @@ public class PostRunScriptExecutorTest {
     }
 
     @Test
-    public void importOnStartup_shouldSaveImages() throws IOException {
+    public void importOnStartup_shouldSaveImages() throws Exception {
         File testFile = new File(testFolder, A_FILE);
         testFile.createNewFile();
         testFile.deleteOnExit();

@@ -5,6 +5,10 @@ import me.dpidun.photobox.scheduler.PhotoWatcherScheduler;
 import org.junit.Before;
 import org.junit.Test;
 import org.mockito.ArgumentCaptor;
+import org.springframework.batch.core.JobParametersInvalidException;
+import org.springframework.batch.core.repository.JobExecutionAlreadyRunningException;
+import org.springframework.batch.core.repository.JobInstanceAlreadyCompleteException;
+import org.springframework.batch.core.repository.JobRestartException;
 
 import java.nio.file.Paths;
 import java.nio.file.WatchEvent;
@@ -36,7 +40,7 @@ public class PhotoWatcherSchedulerTest {
     }
 
     @Test
-    public void watchPhotos_shouldDetectChangedPhotos() throws InterruptedException {
+    public void watchPhotos_shouldDetectChangedPhotos() throws Exception {
         mockWatchService();
 
         unitUnderTest.watchPhotos();

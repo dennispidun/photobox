@@ -30,16 +30,6 @@ public class AvailabilityCheckImportStep extends AbstractStep {
                 .findById(photoId)
                 .orElseThrow(PhotoNotFoundException::new);
 
-        photo.setProcessingStatus(Photo.ProcessingStatus.CHECKING_STEP_AVAILABILITY);
-
-        photoRepository.save(photo);
-
-        try {
-            Thread.sleep(10000L);
-        } catch (InterruptedException e) {
-
-        }
-
         photo.setProcessingStatus(Photo.ProcessingStatus.FINISHED);
 
         photoRepository.save(photo);

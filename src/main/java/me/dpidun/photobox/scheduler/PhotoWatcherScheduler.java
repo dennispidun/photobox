@@ -4,7 +4,10 @@ import me.dpidun.photobox.photo.PhotoService;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Component;
 
-import java.nio.file.*;
+import java.nio.file.Path;
+import java.nio.file.WatchEvent;
+import java.nio.file.WatchKey;
+import java.nio.file.WatchService;
 
 import static java.nio.file.StandardWatchEventKinds.ENTRY_CREATE;
 import static org.springframework.data.util.CastUtils.cast;
@@ -37,7 +40,9 @@ public class PhotoWatcherScheduler {
                 Path filename = ev.context();
                 try {
                     photoService.addPhoto(filename.toString());
-                } catch (Exception e) { }
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
 
             }
         }

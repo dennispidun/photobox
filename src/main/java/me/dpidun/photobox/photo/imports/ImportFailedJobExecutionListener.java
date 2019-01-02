@@ -1,8 +1,8 @@
 package me.dpidun.photobox.photo.imports;
 
-
 import me.dpidun.photobox.photo.Photo;
 import me.dpidun.photobox.photo.PhotoRepository;
+
 import org.springframework.batch.core.BatchStatus;
 import org.springframework.batch.core.JobExecution;
 import org.springframework.batch.core.JobExecutionListener;
@@ -30,8 +30,8 @@ public class ImportFailedJobExecutionListener implements JobExecutionListener {
 
         long photoId = jobExecution.getJobParameters().getLong(PARAMETER_PHOTO_ID);
         Photo photo = photoRepository
-                .findById(photoId)
-                .orElseThrow(PhotoNotFoundException::new);
+            .findById(photoId)
+            .orElseThrow(PhotoNotFoundException::new);
 
         photo.setProcessingStatus(Photo.ProcessingStatus.FAILED);
 

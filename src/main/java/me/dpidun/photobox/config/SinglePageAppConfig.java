@@ -1,16 +1,11 @@
 package me.dpidun.photobox.config;
 
 import me.dpidun.photobox.photo.ImageLocationService;
-import me.dpidun.photobox.photo.PhotoService;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.web.servlet.config.annotation.ResourceHandlerRegistry;
 import org.springframework.web.servlet.config.annotation.ViewControllerRegistry;
 import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
-
-import java.io.File;
-import java.io.IOException;
 
 @Configuration
 public class SinglePageAppConfig implements WebMvcConfigurer {
@@ -31,7 +26,7 @@ public class SinglePageAppConfig implements WebMvcConfigurer {
 
         if (!registry.hasMappingForPattern("/assets/photos/**")) {
             registry.addResourceHandler("/assets/photos/**")
-                .addResourceLocations("file:///"+imageLocationService.getImageLocation()+"/");
+                .addResourceLocations("file:///" + imageLocationService.getImageLocation() + "/");
         }
     }
 }

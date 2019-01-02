@@ -7,7 +7,6 @@ import org.springframework.batch.core.JobParametersInvalidException;
 import org.springframework.batch.core.repository.JobExecutionAlreadyRunningException;
 import org.springframework.batch.core.repository.JobInstanceAlreadyCompleteException;
 import org.springframework.batch.core.repository.JobRestartException;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 
 import javax.annotation.PostConstruct;
@@ -30,16 +29,18 @@ public class PostRunScriptExecutor {
         File folder = new File(imageLocationService.getImageLocation());
         try {
             Arrays.stream(folder.listFiles()).forEach(file
-                    -> {
+                -> {
                 try {
                     photoService.addPhoto(FileUtils.getName(file.getAbsolutePath()));
                 } catch (JobParametersInvalidException
-                        | JobExecutionAlreadyRunningException
-                        | JobInstanceAlreadyCompleteException
-                        | JobRestartException e) {
+                    | JobExecutionAlreadyRunningException
+                    | JobInstanceAlreadyCompleteException
+                    | JobRestartException e) {
+                    e.printStackTrace();
                 }
             });
         } catch (Exception e) {
+            e.printStackTrace();
         }
     }
 }

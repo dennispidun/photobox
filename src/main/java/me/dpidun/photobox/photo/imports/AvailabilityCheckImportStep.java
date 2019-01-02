@@ -27,8 +27,8 @@ public class AvailabilityCheckImportStep extends AbstractStep {
         }
 
         Photo photo = photoRepository
-                .findById(photoId)
-                .orElseThrow(PhotoNotFoundException::new);
+            .findById(photoId)
+            .orElseThrow(PhotoNotFoundException::new);
 
         photo.setProcessingStatus(Photo.ProcessingStatus.FINISHED);
 
@@ -39,7 +39,9 @@ public class AvailabilityCheckImportStep extends AbstractStep {
     public boolean isFileLocked(File file) {
         try {
             FileInputStream in = new FileInputStream(file);
-            if (in!=null) in.close();
+            if (in != null) {
+                in.close();
+            }
             return false;
         } catch (FileNotFoundException e) {
             return true;

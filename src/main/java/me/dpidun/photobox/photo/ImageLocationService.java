@@ -15,7 +15,7 @@ public class ImageLocationService {
     }
 
     public String getImageLocation() {
-        if(this.imagePath == null) {
+        if (this.imagePath == null) {
             File tempLocation = new File("").getAbsoluteFile();
             this.imagePath = tempLocation.getAbsolutePath();
         }

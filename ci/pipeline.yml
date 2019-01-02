@@ -1,5 +1,18 @@
 ---
+resource_types:
+- name: artifactory
+  type: docker-image
+  source:
+    repository: pivotalservices/artifactory-resource
 resources:
+- name: file-repository
+  type: artifactory
+  source:
+    endpoint: http://http://51.75.71.87:8081/artifactory
+    repository: "/java-develop/photobox"
+    username: ci
+    password: ((artifactory-secret))
+    skip_ssl_verification: true
 - name: git-src
   type: git
   source:
@@ -14,3 +27,5 @@ jobs:
   - task: build
     privileged: true
     file: git-src/ci/tasks/build-and-test.yml
+  - put: file-repository
+    params: { file: ./photobox.jar }

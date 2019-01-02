@@ -1,13 +1,11 @@
 package me.dpidun.photobox.scheduler;
 
-import me.dpidun.photobox.photo.PhotoRepository;
 import me.dpidun.photobox.photo.PhotoService;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
 
 import java.io.File;
-import java.io.IOException;
 
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.verify;
@@ -15,7 +13,7 @@ import static org.mockito.Mockito.verify;
 public class PostRunScriptExecutorTest {
 
     public static final String A_FILE = "test.png";
-    private String A_PATH;
+    private String myPath;
     PostRunScriptExecutor unitUnderTest;
     PhotoService mockPhotoService;
     private File testFolder;
@@ -26,10 +24,10 @@ public class PostRunScriptExecutorTest {
         testFolder.mkdir();
         testFolder.deleteOnExit();
 
-        A_PATH = testFolder.getAbsolutePath();
+        myPath = testFolder.getAbsolutePath();
 
         mockPhotoService = mock(PhotoService.class);
-        unitUnderTest = new PostRunScriptExecutor(mockPhotoService, A_PATH);
+        unitUnderTest = new PostRunScriptExecutor(mockPhotoService, myPath);
     }
 
     @After

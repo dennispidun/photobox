@@ -8,11 +8,7 @@ import org.junit.Test;
 import org.mockito.ArgumentCaptor;
 import org.springframework.batch.core.Job;
 import org.springframework.batch.core.JobParameters;
-import org.springframework.batch.core.JobParametersInvalidException;
 import org.springframework.batch.core.launch.JobLauncher;
-import org.springframework.batch.core.repository.JobExecutionAlreadyRunningException;
-import org.springframework.batch.core.repository.JobInstanceAlreadyCompleteException;
-import org.springframework.batch.core.repository.JobRestartException;
 
 import java.io.File;
 import java.io.IOException;
@@ -42,7 +38,7 @@ public class PhotoServiceTest {
     private JobLauncher mockJobLauncher;
     private Job mockImportJob;
 
-    private String A_FILE_NAME;
+    private String myFileName;
 
     @Before
     public void setUp() throws IOException {
@@ -52,10 +48,11 @@ public class PhotoServiceTest {
 
         unitUnderTest = new PhotoService(photoRepository, mockJobLauncher, mockImportJob);
 
-        File a_SUPPORTED_FILE = File.createTempFile(A_FILE_PREFIX, A_FILE_SUPPORTED_SUFFIX);
-        a_SUPPORTED_FILE.deleteOnExit();
+        File supportedFile = File.createTempFile(A_FILE_PREFIX, A_FILE_SUPPORTED_SUFFIX);
+        supportedFile.deleteOnExit();
 
-        A_FILE_NAME = FileUtils.getName(a_SUPPORTED_FILE.getAbsolutePath());
+        myFileName = FileUtils.getName(supportedFile.getAbsolutePath());
+
     }
 
     @Test
@@ -67,7 +64,7 @@ public class PhotoServiceTest {
 
         List<PhotoListItem> actual = unitUnderTest.getPhotos();
         assertThat(actual, hasSize(1));
-        assertThat(actual.get(0).getUri(), is(AN_URI));
+        assertThat(actual.get(0).getUri(), endsWith(AN_URI));
     }
 
     @Test
@@ -82,7 +79,7 @@ public class PhotoServiceTest {
 
         List<PhotoListItem> actual = unitUnderTest.getPhotos();
         assertThat(actual, hasSize(1));
-        assertThat(actual.get(0).getUri(), is(ANOTHER_URI));
+        assertThat(actual.get(0).getUri(), endsWith(ANOTHER_URI));
 
     }
 
@@ -92,7 +89,7 @@ public class PhotoServiceTest {
         when(photoRepository.existsByFileName(stringArgumentCaptor.capture())).thenReturn(true);
 
         try {
-            unitUnderTest.addPhoto(A_FILE_NAME);
+            unitUnderTest.addPhoto(myFileName);
         } finally {
             assertThat(stringArgumentCaptor.getValue(), startsWith(A_FILE_PREFIX));
             assertThat(stringArgumentCaptor.getValue(), endsWith(A_FILE_SUPPORTED_SUFFIX));
@@ -105,37 +102,33 @@ public class PhotoServiceTest {
     }
 
     @Test
-    public void addPhoto_withJpegOrPngFileExtension_shouldCheckExistence() throws Exception {
-        when(photoRepository.existsByFileName(anyString())).thenReturn(false);
-
-        unitUnderTest.addPhoto(A_FILE_PREFIX + ANOTHER_FILE_SUPPORTED_SUFFIX);
-        unitUnderTest.addPhoto(A_FILE_PREFIX + ANOTHER_OTHER_FILE_SUPPORTED_SUFFIX);
-        unitUnderTest.addPhoto(A_FILE_PREFIX + A_FILE_SUPPORTED_SUFFIX);
-    }
-
-    @Test
     public void addPhoto_shouldAddPhoto() throws Exception {
-        when(photoRepository.existsByFileName(anyString())).thenReturn(false);
+        Photo testPhoto = new Photo();
+        testPhoto.setId(1L);
 
-        unitUnderTest.addPhoto(A_FILE_NAME);
+        when(photoRepository.existsByFileName(anyString())).thenReturn(false);
+        when(photoRepository.save(any())).thenReturn(testPhoto);
+
+        unitUnderTest.addPhoto(myFileName);
 
         ArgumentCaptor<Photo> photoArgumentCaptor = ArgumentCaptor.forClass(Photo.class);
         verify(photoRepository).save(photoArgumentCaptor.capture());
 
         assertThat(photoArgumentCaptor.getValue().getFileName(), startsWith(A_FILE_PREFIX));
         assertThat(photoArgumentCaptor.getValue().getFileName(), endsWith(A_FILE_SUPPORTED_SUFFIX));
-        assertThat(photoArgumentCaptor.getValue().getCreatedAt(), DateMatchers.within(20, ChronoUnit.SECONDS, new Date()));
+        assertThat(photoArgumentCaptor.getValue().getCreatedAt(),
+            DateMatchers.within(20, ChronoUnit.SECONDS, new Date()));
     }
 
 
     @Test
     public void addPhoto_shouldStartJob() throws Exception {
-        Photo expected = new Photo(1L, A_FILE_NAME, new Date(), Photo.ProcessingStatus.CREATED);
+        Photo expected = new Photo(1L, myFileName, new Date(), Photo.ProcessingStatus.CREATED);
 
         when(photoRepository.existsByFileName(anyString())).thenReturn(false);
         when(photoRepository.save(any())).thenReturn(expected);
 
-        unitUnderTest.addPhoto(A_FILE_NAME);
+        unitUnderTest.addPhoto(myFileName);
 
         ArgumentCaptor<JobParameters> jobParametersArgumentCaptor = ArgumentCaptor.forClass(JobParameters.class);
         verify(mockJobLauncher).run(any(), jobParametersArgumentCaptor.capture());

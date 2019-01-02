@@ -1,10 +1,10 @@
 import { Component, Input } from '@angular/core';
 
 @Component({
-  selector: 'picture',
+  selector: 'app-picture',
   templateUrl: './picture.component.html'
 })
-export class Picture {
+export class PictureComponent {
   @Input() picture: any;
 
   constructor() {

@@ -4,6 +4,7 @@ import {RouterModule, Routes} from '@angular/router';
 import {NgModule} from '@angular/core';
 import {BrowserModule} from '@angular/platform-browser';
 import {HttpClientModule} from '@angular/common/http';
+import {Picture} from './start/picture/picture.component';
 
 const appRoutes: Routes = [
   {path: '', component: StartComponent}
@@ -12,7 +13,8 @@ const appRoutes: Routes = [
 @NgModule({
   declarations: [
     AppComponent,
-    StartComponent
+    StartComponent,
+    Picture
   ],
   imports: [
     BrowserModule,

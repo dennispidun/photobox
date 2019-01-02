@@ -22,7 +22,7 @@ public class SinglePageAppConfig implements WebMvcConfigurer {
     @Override
     public void addResourceHandlers(ResourceHandlerRegistry registry) {
         if (!registry.hasMappingForPattern("/assets/photos/**")) {
-            registry.addResourceHandler("/assets/photos/**").addResourceLocations("file:///"+imagePath);
+            registry.addResourceHandler("/assets/photos/**").addResourceLocations("file:///"+imagePath+"/");
         }
     }
 }

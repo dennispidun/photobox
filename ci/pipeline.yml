@@ -4,12 +4,22 @@ resource_types:
     type: docker-image
     source:
       repository: pivotalservices/artifactory-resource
+  - name: discord-resource
+    type: docker-image
+    source:
+      repository: trivigy/discord-resource
 resources:
+  - name: discord
+    type: discord-resource
+    check_every: 999999h
+    source:
+      token: ((discord-token))
   - name: jfrog-artifactory
     type: artifactory
     source:
-      endpoint: http://http://51.75.71.87:8081/artifactory
+      endpoint: http://51.75.71.87:8081/artifactory
       repository: "/java-develop/photobox"
+      regex: "photobox-(?<version>.*).jar"
       username: ci
       password: ((artifactory-secret))
       skip_ssl_verification: true
@@ -28,4 +38,11 @@ jobs:
         privileged: true
         file: git-src/ci/tasks/build-and-test.yml
       - put: jfrog-artifactory
-        params: { file: artifact/photobox.jar }
+        params: { file: git-src/build/libs/photobox-*.jar }
+      - put: discord
+        params:
+          channel: "((discord-channel-id))"
+          color: 6076508
+          title: PhotoBox Deployment Status
+          message: |
+            Success!!!

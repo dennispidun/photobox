@@ -21,4 +21,3 @@ run:
     - |
       cd git-src
       ./gradlew clean build allTest --stacktrace
-      cp ./build/libs/*.jar ../artifact/photobox.jar

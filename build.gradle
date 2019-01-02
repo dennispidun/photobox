@@ -125,7 +125,7 @@ bootRun {
     args = ['--spring.profiles.active=dev']
 }
 
-copyResources.dependsOn yarn_run_build
+copyResources.dependsOn npm_run_build
 processResources.dependsOn copyResources
 
 apiTest.shouldRunAfter(test)

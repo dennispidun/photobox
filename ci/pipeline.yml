@@ -5,7 +5,7 @@ resource_types:
     source:
       repository: pivotalservices/artifactory-resource
 resources:
-  - name: file-repository
+  - name: jfrog-artifactory
     type: artifactory
     source:
       endpoint: http://http://51.75.71.87:8081/artifactory
@@ -27,5 +27,5 @@ jobs:
       - task: build
         privileged: true
         file: git-src/ci/tasks/build-and-test.yml
-      - put: file-repository
-        params: { file: ../artifact/photobox.jar }
+      - put: jfrog-artifactory
+        params: { file: artifact/photobox.jar }

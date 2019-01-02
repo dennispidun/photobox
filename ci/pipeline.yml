@@ -38,7 +38,7 @@ jobs:
         privileged: true
         file: git-src/ci/tasks/build-and-test.yml
       - put: jfrog-artifactory
-        params: { file: git-src/build/libs/photobox-*.jar }
+        params: { file: artifact/photobox-*.jar }
       - put: discord
         params:
           channel: "((discord-channel-id))"

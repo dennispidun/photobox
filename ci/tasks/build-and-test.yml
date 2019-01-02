@@ -21,3 +21,4 @@ run:
     - |
       cd git-src
       ./gradlew clean build allTest --stacktrace
+      mv build/libs/*.jar ../artifact/

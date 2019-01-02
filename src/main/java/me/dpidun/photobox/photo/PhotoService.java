@@ -9,8 +9,11 @@ import org.springframework.batch.core.repository.JobExecutionAlreadyRunningExcep
 import org.springframework.batch.core.repository.JobInstanceAlreadyCompleteException;
 import org.springframework.batch.core.repository.JobRestartException;
 import org.springframework.beans.factory.annotation.Qualifier;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 
+import java.io.File;
+import java.io.IOException;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
@@ -22,12 +25,12 @@ import static me.dpidun.photobox.photo.imports.AvailabilityCheckImportStep.PARAM
 @Service
 public class PhotoService {
 
-
     private PhotoRepository photoRepository;
     private JobLauncher jobLauncher;
     private Job importJob;
 
-    public PhotoService(PhotoRepository photoRepository, JobLauncher jobLauncher, @Qualifier("importJob") Job importJob) {
+    public PhotoService(PhotoRepository photoRepository, JobLauncher jobLauncher,
+        @Qualifier("importJob") Job importJob) {
         this.photoRepository = photoRepository;
         this.jobLauncher = jobLauncher;
         this.importJob = importJob;

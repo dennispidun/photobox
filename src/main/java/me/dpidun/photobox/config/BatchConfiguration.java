@@ -1,6 +1,8 @@
 package me.dpidun.photobox.config;
 
+import me.dpidun.photobox.photo.ImageLocationService;
 import me.dpidun.photobox.photo.PhotoRepository;
+import me.dpidun.photobox.photo.PhotoService;
 import me.dpidun.photobox.photo.imports.AvailabilityCheckImportStep;
 import me.dpidun.photobox.photo.imports.ImportFailedJobExecutionListener;
 import org.springframework.batch.core.Job;
@@ -11,6 +13,7 @@ import org.springframework.batch.core.launch.support.SimpleJobLauncher;
 import org.springframework.batch.core.repository.JobRepository;
 import org.springframework.batch.core.repository.support.JobRepositoryFactoryBean;
 import org.springframework.batch.support.transaction.ResourcelessTransactionManager;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
@@ -64,8 +67,10 @@ public class BatchConfiguration {
     }
 
     @Bean
-    public AvailabilityCheckImportStep getImportStep(PhotoRepository photoRepository, JobRepository jobRepository, @Value("${images.path}") String imagePath) {
-        AvailabilityCheckImportStep availabilityCheckImportStep = new AvailabilityCheckImportStep(photoRepository, imagePath);
+    public AvailabilityCheckImportStep getImportStep(PhotoRepository photoRepository,
+        JobRepository jobRepository, @Autowired ImageLocationService imageLocationService) {
+        AvailabilityCheckImportStep availabilityCheckImportStep =
+            new AvailabilityCheckImportStep(photoRepository, imageLocationService.getImageLocation());
         availabilityCheckImportStep.setName("checkPhotoAvailability");
         availabilityCheckImportStep.setJobRepository(jobRepository);
 

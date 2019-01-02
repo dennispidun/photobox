@@ -1,5 +1,6 @@
 package me.dpidun.photobox.scheduler;
 
+import me.dpidun.photobox.photo.ImageLocationService;
 import me.dpidun.photobox.photo.PhotoService;
 import org.junit.After;
 import org.junit.Before;
@@ -27,7 +28,7 @@ public class PostRunScriptExecutorTest {
         myPath = testFolder.getAbsolutePath();
 
         mockPhotoService = mock(PhotoService.class);
-        unitUnderTest = new PostRunScriptExecutor(mockPhotoService, myPath);
+        unitUnderTest = new PostRunScriptExecutor(mockPhotoService, new ImageLocationService(myPath));
     }
 
     @After

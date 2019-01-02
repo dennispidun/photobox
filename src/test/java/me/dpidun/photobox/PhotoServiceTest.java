@@ -55,6 +55,7 @@ public class PhotoServiceTest {
 
     }
 
+
     @Test
     public void getPhotos_shouldReturnPhotos() {
 

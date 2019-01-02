@@ -1,5 +1,6 @@
 package me.dpidun.photobox.scheduler;
 
+import me.dpidun.photobox.photo.ImageLocationService;
 import me.dpidun.photobox.photo.PhotoService;
 import org.h2.store.fs.FileUtils;
 import org.springframework.batch.core.JobParametersInvalidException;
@@ -17,17 +18,16 @@ import java.util.Arrays;
 public class PostRunScriptExecutor {
 
     private final PhotoService photoService;
+    private final ImageLocationService imageLocationService;
 
-    private final String imagePath;
-
-    public PostRunScriptExecutor(PhotoService photoService, @Value("${images.path}") String imagePath) {
+    public PostRunScriptExecutor(PhotoService photoService, ImageLocationService imageLocationService) {
         this.photoService = photoService;
-        this.imagePath = imagePath;
+        this.imageLocationService = imageLocationService;
     }
 
     @PostConstruct
     public void importOnStartup() {
-        File folder = new File(imagePath);
+        File folder = new File(imageLocationService.getImageLocation());
         try {
             Arrays.stream(folder.listFiles()).forEach(file
                     -> {

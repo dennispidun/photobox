@@ -22,7 +22,7 @@ version '1.0-SNAPSHOT'
 
 bootJar {
     baseName = 'photobox'
-    version =  version
+    version = version
 }
 
 sourceCompatibility = 1.8
@@ -95,7 +95,7 @@ dependencies {
 
 node {
     download = false
-	version = '10.15.0'
+    version = '10.15.0'
     npmWorkDir = file("${project.buildDir}/npm")
     nodeModulesDir = file("${project.projectDir}/client")
 }

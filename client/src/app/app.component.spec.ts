@@ -10,15 +10,15 @@ describe('AppComponent', () => {
 
   beforeEach(async(() => {
     TestBed.configureTestingModule({
-      declarations: [ AppComponent ],
+      declarations: [AppComponent],
       imports: [
         RouterModule.forRoot([])
       ],
       providers: [
-        {provide: APP_BASE_HREF, useValue : '/' }
+        {provide: APP_BASE_HREF, useValue: '/'}
       ]
     })
-    .compileComponents();
+      .compileComponents();
   }));
 
   beforeEach(() => {

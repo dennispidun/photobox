@@ -94,7 +94,7 @@ dependencies {
 }
 
 node {
-    download = true
+    download = false
 	version = '10.15.0'
     npmWorkDir = file("${project.buildDir}/npm")
     nodeModulesDir = file("${project.projectDir}/client")

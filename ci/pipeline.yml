@@ -37,12 +37,29 @@ jobs:
       - task: build
         privileged: true
         file: git-src/ci/tasks/build-and-test.yml
+        on_failure:
+          put: discord
+          params:
+            channel: ((discord-channel-id))
+            color: 16007746
+            title: PhotoBox Build Status
+            message: |
+              Build failed!
       - put: jfrog-artifactory
         params: { file: artifact/photobox-*.jar }
-      - put: discord
-        params:
-          channel: "((discord-channel-id))"
-          color: 6076508
-          title: PhotoBox Deployment Status
-          message: |
-            Success!!!
+        on_success:
+          put: discord
+          params:
+            channel: ((discord-channel-id))
+            color: 6076508
+            title: PhotoBox Deployment Status
+            message: |
+              Successfully deployed to Artifactory
+        on_failure:
+          put: discord
+          params:
+            channel: ((discord-channel-id))
+            color: 16007746
+            title: PhotoBox Deployment Status
+            message: |
+              Deployment to Artifactory failed

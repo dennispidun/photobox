@@ -17,7 +17,7 @@ resources:
       branch: version
       file: version
       private_key: ((git-private-key))
-  - name: discord
+  - name: alert
     type: discord-resource
     check_every: 999999h
     source:
@@ -66,7 +66,7 @@ jobs:
         privileged: true
         file: git-src/ci/tasks/build-and-test.yml
         on_failure:
-          put: discord
+          put: alert
           params:
             channel: ((discord-channel-id))
             color: 16007746
@@ -76,7 +76,7 @@ jobs:
       - put: develop-artifactory
         params: { file: artifact/photobox-*.jar }
         on_success:
-          put: discord
+          put: alert
           params:
             channel: ((discord-channel-id))
             color: 6076508
@@ -84,7 +84,7 @@ jobs:
             message: |
               Successfully deployed to Artifactory
         on_failure:
-          put: discord
+          put: alert
           params:
             channel: ((discord-channel-id))
             color: 16007746

@@ -9,12 +9,20 @@ resource_types:
     source:
       repository: trivigy/discord-resource
 resources:
-  - name: discord
+  - name: version
+    type: semver
+    source:
+      driver: git
+      uri: git@github.com:dennispidun/photobox.git
+      branch: version
+      file: version
+      private_key: ((git-private-key))
+  - name: alert
     type: discord-resource
     check_every: 999999h
     source:
       token: ((discord-token))
-  - name: jfrog-artifactory
+  - name: develop-artifactory
     type: artifactory
     source:
       endpoint: http://51.75.71.87:8081/artifactory
@@ -23,32 +31,52 @@ resources:
       username: ci
       password: ((artifactory-secret))
       skip_ssl_verification: true
+  - name: release-artifactory
+    type: artifactory
+    source:
+      endpoint: http://51.75.71.87:8081/artifactory
+      repository: "/java-release/photobox"
+      regex: "photobox-(?<version>.*).jar"
+      username: ci
+      password: ((artifactory-secret))
+      skip_ssl_verification: true
   - name: git-src
     type: git
     source:
       uri: git@github.com:dennispidun/photobox.git
-      branch: master
+      branch: develop
       private_key: ((git-private-key))
 jobs:
+  - name: bump-major
+    plan:
+      - put: version
+        params: { bump: major }
+  - name: bump-minor
+    plan:
+      - put: version
+        params: { bump: minor }
   - name: build-and-test
     plan:
+      - get: version
+        trigger: false
+        params: { bump: patch }
       - get: git-src
         trigger: true
       - task: build
         privileged: true
         file: git-src/ci/tasks/build-and-test.yml
         on_failure:
-          put: discord
+          put: alert
           params:
             channel: ((discord-channel-id))
             color: 16007746
             title: PhotoBox Build Status
             message: |
               Build failed!
-      - put: jfrog-artifactory
+      - put: develop-artifactory
         params: { file: artifact/photobox-*.jar }
         on_success:
-          put: discord
+          put: alert
           params:
             channel: ((discord-channel-id))
             color: 6076508
@@ -56,10 +84,27 @@ jobs:
             message: |
               Successfully deployed to Artifactory
         on_failure:
-          put: discord
+          put: alert
           params:
             channel: ((discord-channel-id))
             color: 16007746
             title: PhotoBox Deployment Status
             message: |
               Deployment to Artifactory failed
+      - put: version
+        params: { file: version/version }
+  - name: release-it
+    plan:
+      - get: git-src
+      - get: version
+        passed:
+          - build-and-test
+        trigger: false
+        params: { bump: patch }
+      - get: develop-artifactory
+        passed:
+          - build-and-test
+      - task: copy-artifacts
+        file: git-src/ci/tasks/copy-latest-version.yml
+      - put: release-artifactory
+        params: { file: artifact/photobox-*.jar }

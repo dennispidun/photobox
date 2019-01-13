@@ -9,6 +9,7 @@ image_resource:
 
 inputs:
   - name: git-src
+  - name: version
 
 outputs:
   - name: artifact
@@ -21,4 +22,5 @@ run:
     - |
       cd git-src
       ./gradlew clean build allTest --stacktrace
-      cp ./build/libs/*.jar ../artifact/
+      version=$(head -n 1 ../version/version)
+      cp ./build/libs/*.jar ../artifact/photobox-$version.jar

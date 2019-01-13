@@ -9,12 +9,20 @@ resource_types:
     source:
       repository: trivigy/discord-resource
 resources:
+  - name: version
+    type: semver
+    source:
+      driver: git
+      uri: git@github.com:dennispidun/photobox.git
+      branch: version
+      file: version
+      private_key: ((git-private-key))
   - name: discord
     type: discord-resource
     check_every: 999999h
     source:
       token: ((discord-token))
-  - name: jfrog-artifactory
+  - name: develop-artifactory
     type: artifactory
     source:
       endpoint: http://51.75.71.87:8081/artifactory
@@ -27,13 +35,28 @@ resources:
     type: git
     source:
       uri: git@github.com:dennispidun/photobox.git
-      branch: master
+      branch: develop
       private_key: ((git-private-key))
 jobs:
-  - name: build-and-test
+  - name: bump-major
     plan:
-      - get: git-src
+      - get: version
+        params: { bump: major }
+      - put: version
+        params: { file: version/version }
+  - name: bump-minor
+    plan:
+      - get: version
+        params: { bump: minor }
+      - put: version
+        params: { file: version/version }
+  - name: develop-build
+    plan:
+      - get: version
         trigger: true
+        params: { bump: patch }
+      - get: git-src
+        trigger: false
       - task: build
         privileged: true
         file: git-src/ci/tasks/build-and-test.yml
@@ -45,7 +68,7 @@ jobs:
             title: PhotoBox Build Status
             message: |
               Build failed!
-      - put: jfrog-artifactory
+      - put: develop-artifactory
         params: { file: artifact/photobox-*.jar }
         on_success:
           put: discord
@@ -63,3 +86,5 @@ jobs:
             title: PhotoBox Deployment Status
             message: |
               Deployment to Artifactory failed
+      - put: version
+        params: { file: version/version }

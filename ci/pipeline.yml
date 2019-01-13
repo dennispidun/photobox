@@ -102,8 +102,8 @@ jobs:
         trigger: false
         params: { bump: patch }
       - get: develop-artifactory
-          passed:
-            - develop-build
+        passed:
+          - develop-build
       - task: copy-artifacts
         file: git-src/ci/tasks/copy-latest-version.yml
       - put: release-artifactory

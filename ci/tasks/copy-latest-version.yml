@@ -20,4 +20,5 @@ run:
   args:
     - -exc
     - |
-      cp ./develop-artifactory/*.jar ../artifact
+      cp ./develop-artifactory/*.jar ./artifact
+

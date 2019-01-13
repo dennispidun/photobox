@@ -55,7 +55,7 @@ jobs:
     plan:
       - put: version
         params: { bump: minor }
-  - name: develop-build
+  - name: build-and-test
     plan:
       - get: version
         trigger: false
@@ -93,17 +93,17 @@ jobs:
               Deployment to Artifactory failed
       - put: version
         params: { file: version/version }
-  - name: release-build
+  - name: release-it
     plan:
       - get: git-src
       - get: version
         passed:
-          - develop-build
+          - build-and-test
         trigger: false
         params: { bump: patch }
       - get: develop-artifactory
         passed:
-          - develop-build
+          - build-and-test
       - task: copy-artifacts
         file: git-src/ci/tasks/copy-latest-version.yml
       - put: release-artifactory

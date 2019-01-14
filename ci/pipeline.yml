@@ -40,11 +40,17 @@ resources:
       username: ci
       password: ((artifactory-secret))
       skip_ssl_verification: true
-  - name: git-src
+  - name: dev-src
     type: git
     source:
       uri: git@github.com:dennispidun/photobox.git
       branch: develop
+      private_key: ((git-private-key))
+  - name: release-src
+    type: git
+    source:
+      uri: git@github.com:dennispidun/photobox.git
+      branch: master
       private_key: ((git-private-key))
 jobs:
   - name: bump-major
@@ -60,11 +66,11 @@ jobs:
       - get: version
         trigger: false
         params: { bump: patch }
-      - get: git-src
+      - get: dev-src
         trigger: true
       - task: build
         privileged: true
-        file: git-src/ci/tasks/build-and-test.yml
+        file: dev-src/ci/tasks/build-and-test.yml
         on_failure:
           put: alert
           params:
@@ -95,16 +101,16 @@ jobs:
         params: { file: version/version }
   - name: release-it
     plan:
-      - get: git-src
+      - get: release-src
+        trigger: true
       - get: version
         passed:
           - build-and-test
         trigger: false
-        params: { bump: patch }
       - get: develop-artifactory
         passed:
           - build-and-test
       - task: copy-artifacts
-        file: git-src/ci/tasks/copy-latest-version.yml
+        file: release-src/ci/tasks/copy-latest-version.yml
       - put: release-artifactory
         params: { file: artifact/photobox-*.jar }

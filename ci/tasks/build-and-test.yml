@@ -8,7 +8,7 @@ image_resource:
     tag: 8u151-jdk-alpine3.7
 
 inputs:
-  - name: git-src
+  - name: dev-src
   - name: version
 
 outputs:
@@ -20,7 +20,7 @@ run:
   args:
     - -exc
     - |
-      cd git-src
+      cd dev-src
       ./gradlew clean build allTest --stacktrace
       version=$(head -n 1 ../version/version)
       cp ./build/libs/*.jar ../artifact/photobox-$version.jar
